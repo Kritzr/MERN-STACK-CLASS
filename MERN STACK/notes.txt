@@ -1,0 +1,21 @@
+date: 24-02-2025
+    html is run because of browser. 
+    browser has a rendering engine which changes for each browser. 
+    these rendering engines will check if it gets a word or tag.(try to look based on it-> so that you can understand what that is whilst building your own browser)
+
+    >> what is mern stack and how does it work ??
+        client : react 
+        server : nodejs and expressjs
+        database: mongodb
+
+        ui and ux -> (user interface and user experience) try to learn something about it 
+        front end can be done with angular, react, flutter etc.,
+        has no data stored. just for display 
+
+        frontend and database dont interact all by themselves. the coordination between them is done by the server.
+
+    >> html:
+        containers and standalone tags - container tags: divs, paragraphs, tables etc.,;standalone tags: br, hr
+        lorem is for page filling 
+        what are input tags? 
+
