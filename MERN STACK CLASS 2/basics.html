@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Basics</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+            /* Add border around the page */
+            body {
+                border: 5px solid #000; /* Border around the entire body */
+                padding: 20px;
+                background-color: #f0f8ff; /* Light background color */
+            }
+
+            /* Element selector */
+            p {
+                color: blue;
+                font-size: 25px; 
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            /* Class selector */
+            .text-right {
+                text-align: right;
+            }
+
+            /* ID selector */
+            #special {
+                color: red;
+                font-weight: bold;
+            }
+
+            /* Parent and Child selector */
+            div p {
+                color: green; /* Styles all <p> tags inside <div> */
+            }
+
+            /* Sibling selector */
+            h1 + p {
+                color: purple; /* Styles the first <p> element that comes immediately after h1 */
+            }
+
+            /* Box model concepts */
+            .box {
+                margin: 20px; /* Margin creates space outside the element */
+                padding: 15px; /* Padding creates space inside the element */
+                border: 2px solid black; /* Border around the element */
+            }
+
+            /* Positioning concepts */
+            .relative-box {
+                position: relative;
+                top: 20px; /* Moves the element 20px from the top */
+            }
+
+            .absolute-box {
+                position: absolute;
+                top: 50px; /* Will be positioned 50px from the top of the nearest positioned ancestor */
+            }
+
+            .fixed-box {
+                position: fixed;
+                bottom: 10px; /* Sticks the element 10px from the bottom of the viewport */
+                right: 10px; /* Sticks it 10px from the right side of the viewport */
+            }
+
+            .sticky-box {
+                position: sticky;
+                top: 0; /* Sticks the element at the top of the viewport when scrolling */
+            }
+        </style>
+    </head>
+    <body>
+        <h1>hello, krithika</h1>
+        <h1 class="display-1 text-uppercase text-decoration-underline">display-1</h1>
+
+        <p class="text-right">Lorem ipsum dolor sit amet consectetur adipisicing elit. Id reiciendis, numquam cupiditate expedita repellendus saepe vero aliquam. Libero tempore alias, amet facilis illo quasi, maiores minima modi quod eaque fuga.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora distinctio pariatur sed officiis non, quis veniam mollitia quidem libero repellat quae, exercitationem soluta quasi dolores ad voluptate aliquid numquam blanditiis.</p>
+
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non, eaque, fuga amet assumenda laboriosam quis, cum in voluptate nulla sint omnis debitis voluptas rerum illo delectus nam perferendis tempora mollitia.</p>
+
+        <div class="p-3 text-primary bg-light border border-primary rounded-3 text-right">
+            Example element with utilities
+        </div>
+        <br>
+
+        <p class="text-start">Start aligned text on all viewport sizes.</p>
+        <p class="text-center">Center aligned text on all viewport sizes.</p>
+        <p class="text-end">End aligned text on all viewport sizes.</p>
+
+        <p class="text-body-secondary">
+            <a href="#" class="text-reset">reset link</a> .
+        </p>
+
+        <div class="p-3 mb-2 bg-primary text-white">.bg-primary</div>
+        <div class="p-3 mb-2 bg-secondary text-white">.bg-secondary</div>
+        <div class="p-3 mb-2 bg-success text-white">.bg-success</div>
+        <div class="p-3 mb-2 bg-danger text-white">.bg-danger</div>
+        <div class="p-3 mb-2 bg-warning text-dark">.bg-warning</div>
+        <div class="p-3 mb-2 bg-info text-dark">.bg-info</div>
+        <div class="p-3 mb-2 bg-light text-dark">.bg-light</div>
+        <div class="p-3 mb-2 bg-dark text-white">.bg-dark</div>
+
+        <button class="btn btn-primary">❤️ Yenna Thambi</button>
+        <button class="btn btn-success">✔️ Done</button>
+        <button class="btn btn-danger">❌ Cancel</button>
+
+        <div class="relative-box box">This box is relatively positioned.</div>
+        <br>
+        <div class="absolute-box box">This box is absolutely positioned.</div>
+        <br>
+        
+        <div class="sticky-box box">This box is sticky positioned.</div>
+        <br>
+        <div class="fixed-box box">This box is fixed positioned.</div>
+        <br>
+
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                  Accordion Item #1
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                  Accordion Item #2
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" ></script>
+    </body>
+</html>
