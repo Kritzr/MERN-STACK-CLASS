@@ -1,0 +1,10 @@
+revision of last class's stuff:
+1. bootstrap, accordians, cards
+cdn
+grid system is for layout ->help in arranging elemenets in order
+divides into 12 frames and then decides which comes where
+1. what is container?
+
+2. what is container fluid?
+
+
