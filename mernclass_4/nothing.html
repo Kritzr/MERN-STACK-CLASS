@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="t">hello</h1>
+    <p class ="p">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima provident aperiam natus impedit illo voluptas odio fugiat voluptatem optio ea porro magni quas labore blanditiis totam dolor, quibusdam odit at!</p>
+    <button onclick="ab()">press this</button>
+    <h1 id="heading">hello</h1>
+    <h2>hello</h2>
+    <h1 class="title">hello</h1>
+
+    <input type="text" id="myInput" placeholder="Enter your task">
+    <button onclick="storeValue()">Store Value</button>
+    <ul id="valueList"></ul>
+
+    <script> 
+        console.dir(document); 
+
+        let h1tag = document.getElementsByClassName("t"); 
+        console.dir(h1tag[0]);
+        h1tag[0].innerText = "Krithika"; 
+
+        function ab(){
+            let paratag = document.getElementsByClassName("p");
+            console.dir(paratag[0]);
+            paratag[0].innerText = "my name is krithika";
+        }
+
+        let h4tag = document.querySelector(".title");
+        h4tag.innerText = "Krithika";
+
+        let h2tags = document.getElementsByTagName("h2");
+        h2tags[0].innerText = "Krithika";
+        let h3tag = document.getElementById("heading");
+        h3tag.innerText = "Krithika";
+
+        let storedValues = [];
+
+        function storeValue() {
+            let inputField = document.getElementById("myInput");
+            let value = inputField.value.trim();
+            if (value) {
+                storedValues.push(value);
+                displayValues();
+                inputField.value = "";
+            }
+        }
+
+        function displayValues() {
+            let valueList = document.getElementById("valueList");
+            valueList.innerHTML = "";
+            storedValues.forEach(value => {
+                let li = document.createElement("li");
+                li.textContent = value;
+                valueList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>

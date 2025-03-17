@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Todo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+</head>
+<body>
+    <input type="text" id="myInput" placeholder="Enter your task">
+    <button onclick="storeValue()">add task</button>
+    <ul id="valueList"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let storedValues = [];
+
+        function storeValue() {
+            let inputField = document.getElementById("myInput");
+            let value = inputField.value.trim();
+            if (value) {
+                storedValues.push(value);
+                displayValues();
+                inputField.value = "";
+            }
+        }
+
+        function displayValues() {
+            debugger
+            //creates element by making it as an spontaneous list id
+            let valueList = document.getElementById("valueList");
+            valueList.innerHTML = "";
+            storedValues.forEach(value => {
+                let li = document.createElement("li");
+                li.innerText = value;
+                valueList.appendChild(li);
+            });
+        }
+
+    </script>
+</body>
+</html>
