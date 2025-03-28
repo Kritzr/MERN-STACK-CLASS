@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background-color: #e7aaff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .timer-container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(230, 105, 255, 0.2);
+            text-align: center;
+        }
+
+        #timer {
+            font-size: 4rem;
+            color: #f369ff;
+            margin: 20px 0;
+        }
+
+        #status {
+            font-size: 1.5rem;
+            color: #e414ff;
+            margin-bottom: 20px;
+        }
+
+        .timer-circle {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 10px solid #f0b6ff;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        button {
+            background-color: #e169ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #bc14ff;
+        }
+
+        .cute-sparkle {
+            animation: sparkle 1s infinite alternate;
+        }
+
+        @keyframes sparkle {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="timer-circle">
+            <div id="timer">25:00</div>
+        </div>
+        <div id="status">Ready to study?</div>
+        <div>
+            <button id="startBtn">Start Pomodoro</button>
+            <button id="resetBtn">Reset Timer</button>
+        </div>
+    </div>
+
+    <script>
+        const timerDisplay = document.getElementById('timer');
+        const statusDisplay = document.getElementById('status');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const timerCircle = document.querySelector('.timer-circle');
+
+        let workTime = 25 * 60;
+        let breakTime = 5 * 60;
+        let remainingTime = workTime;
+        let isWorkingSession = true;
+        let timerInterval;
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            timerDisplay.textContent = formatTime(remainingTime);
+            // Adjust circle size based on the remaining time
+            const totalSessionTime = isWorkingSession ? workTime : breakTime;
+            const progress = (totalSessionTime - remainingTime) / totalSessionTime;
+            timerCircle.style.transform = `scale(${1 - progress * 0.2})`;
+        }
+
+        function startTimer() {
+            startBtn.disabled = true;
+            startBtn.classList.add('cute-sparkle');
+
+            timerInterval = setInterval(() => {
+                remainingTime--;
+
+                updateTimer();
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    isWorkingSession = !isWorkingSession;
+
+                    if (isWorkingSession) {
+                        statusDisplay.textContent = 'Break time over! Get back to work!';
+                        remainingTime = workTime;
+                    } else {
+                        statusDisplay.textContent = 'Work time over! Take a break!';
+                        remainingTime = breakTime;
+                    }
+
+                    startBtn.classList.remove('cute-sparkle');
+                    updateTimer();
+                }
+            }, 1000);
+
+            statusDisplay.textContent = isWorkingSession ? 'Working Hard! 💪' : 'Taking a Break 🌈';
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isWorkingSession = true;
+            remainingTime = workTime;
+            updateTimer();
+            statusDisplay.textContent = 'Ready to start?';
+            startBtn.disabled = false;
+            startBtn.classList.remove('cute-sparkle');
+            timerCircle.style.transform = 'scale(1)';
+        }
+
+        startBtn.addEventListener('click', startTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        updateTimer();
+    </script>
+</body>
+</html>

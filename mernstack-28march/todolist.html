@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>turumaakur</title>
+    <style>
+        body{
+            font-family: 'Comic Sans MS', cursive;
+            background-color: #fff7cc;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .todo-container{
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 20px rgba(255, 240, 105, 0.2);
+        }
+
+        .todo-header {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #todoInput {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #fffab6;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        #addTodoBtn {
+            background-color: #ffe469;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #addTodoBtn:hover {
+            background-color: #ffc814;
+        }
+
+        #todoList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff9f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .todo-text {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            background-color: #ffd06b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .todo-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .filter-btn {
+            background-color: #ffeeb6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: #ffe969;
+        }
+
+        .cute-sparkle {
+            animation: sparkle 1s infinite alternate;
+        }
+
+        @keyframes sparkle {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <body>
+        <div class="todo-container">
+            <div class="todo-header">
+                <input type="text" id="todoInput" placeholder="What's your cureeie task?">
+                <button id="addTodoBtn">Add Task</button>
+            </div>
+    
+            <ul id="todoList"></ul>
+    
+            <div class="todo-actions">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+        </div>
+    
+        <script>
+            const todoInput = document.getElementById('todoInput');
+            const addTodoBtn = document.getElementById('addTodoBtn');
+            const todoList = document.getElementById('todoList');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+    
+            let todos = [];
+    
+            function renderTodos(filter = 'all') {
+                todoList.innerHTML = '';
+                
+                const filteredTodos = todos.filter(todo => {
+                    if (filter === 'active') return !todo.completed;
+                    if (filter === 'completed') return todo.completed;
+                    return true;
+                });
+    
+                filteredTodos.forEach((todo, index) => {
+                    const todoItem = document.createElement('li');
+                    todoItem.classList.add('todo-item');
+                    if (todo.completed) todoItem.classList.add('completed');
+    
+                    todoItem.innerHTML = `
+                        <span class="todo-text">${todo.text}</span>
+                        <button class="toggle-btn" onclick="toggleTodo(${index})">
+                            ${todo.completed ? '✓' : '○'}
+                        </button>
+                        <button class="delete-btn" onclick="deleteTodo(${index})">🗑️</button>
+                    `;
+    
+                    todoList.appendChild(todoItem);
+                });
+            }
+    
+            function addTodo() {
+                const todoText = todoInput.value.trim();
+                if (todoText) {
+                    todos.push({ text: todoText, completed: false });
+                    todoInput.value = '';
+                    renderTodos(getCurrentFilter());
+                    addTodoBtn.classList.add('cute-sparkle');
+                    setTimeout(() => addTodoBtn.classList.remove('cute-sparkle'), 1000);
+                }
+            }
+    
+            function deleteTodo(index) {
+                todos.splice(index, 1);
+                renderTodos(getCurrentFilter());
+            }
+    
+            function toggleTodo(index) {
+                todos[index].completed = !todos[index].completed;
+                renderTodos(getCurrentFilter());
+            }
+    
+            function getCurrentFilter() {
+                const activeFilter = document.querySelector('.filter-btn.active');
+                return activeFilter ? activeFilter.dataset.filter : 'all';
+            }
+    
+            // Event Listeners
+            addTodoBtn.addEventListener('click', addTodo);
+            todoInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTodo();
+            });
+    
+            // Filter Buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    renderTodos(button.dataset.filter);
+                });
+            });
+    
+            // Initial render
+            renderTodos();
+        </script>
+</body>
+</html>
