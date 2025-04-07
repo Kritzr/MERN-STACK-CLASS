@@ -1,0 +1,86 @@
+What is a Callback Function?
+A callback function is a function passed as an argument to another function, and it’s called (executed) later inside that outer function.
+
+It allows you to control the order of execution, especially in asynchronous code (like fetching data, event listeners, or timers).
+
+ Why use callbacks?
+Because JavaScript is non-blocking and runs code asynchronously. So we need a way to say, “Hey, run this after you're done!”
+
+ Basic Example
+js
+Copy
+Edit
+function greet(name, callback) {
+  console.log("Hi, " + name);
+  callback();  // calling the callback function
+}
+
+function sayBye() {
+  console.log("Bye!");
+}
+
+greet("Krithika", sayBye);
+Output:
+
+
+Edit
+Hi, Krithika
+Bye!
+Here, sayBye is passed as a callback and executed after greeting.
+
+With Asynchronous Code (like setTimeout)
+js
+Copy
+Edit
+setTimeout(function () {
+  console.log("This runs after 2 seconds");
+}, 2000);
+Here, the anonymous function is a callback that runs after 2 seconds.
+
+📥 Another Common Use – Array Methods
+js
+
+
+const numbers = [1, 2, 3];
+numbers.forEach(function (num) {
+  console.log(num * 2);  // callback for each item
+});
+Summary
+Term	Meaning
+Callback	A function passed as an argument to be "called back" later
+Usage	Async code, event handlers, array methods, etc.
+Syntax	someFunction(anotherFunction)
+
+
+let a=(v1)=>{
+  let newvalue="this is from a"
+  vi(newvalue)
+  //console.log(v1)
+}
+let b=()=>{
+
+}
+a("hi")
+a("hello")
+a(b) //am passing the function itself, so we wont put ()after b. if i do so, it will call the b function.
+
+
+we use regular expression to validate the inputs in forms
+for example, a regex for mobile number based on indian mobile = "^[6-9]+[0-9]{9}$"
+here ^ means
+     must start with 6-9
+     can have anyother number after it . use '+' for concatenation 
+     {9} number of digits
+     $ ends the string 
+
+login signup, forget password
+navbar, footer, homepage
+
+faq, privacy policy, about us, terms and conditions 
+
+
+onchange() is triggered when there is a state change. -> asks for the callback function
+onchange(x) -> x is the data stored 
+
+json is derived from js. can send data from one application to another.
+json is the container which is outside the app. 
