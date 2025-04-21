@@ -1,0 +1,309 @@
+Let's break down the components needed for the **Event Registration Portal** UI in React. This will include the following sections:
+
+1. **Navbar**: Navigation with links.
+2. **Hero Section**: Display the event banner and a call to action.
+3. **Event List**: A list of events (sessions) with a "Register" button for each session.
+4. **Registration Form**: A form to register for a session, with pre-filled data if a session is selected.
+5. **Footer**: Displaying contact information and social links.
+
+I'll walk you through how to set up the structure for each section using **React**, **useState**, and **localStorage** for persistent storage.
+
+### Step 1: Set up the Project
+
+1. **Create a React App** (if you haven't already):
+
+   ```bash
+   npx create-react-app event-registration
+   cd event-registration
+   ```
+
+2. **Install Bootstrap for styling**:
+
+   ```bash
+   npm install bootstrap
+   ```
+
+3. **Import Bootstrap in `src/index.js`**:
+
+   ```javascript
+   import 'bootstrap/dist/css/bootstrap.min.css';
+   ```
+
+### Step 2: Create Components
+
+#### 1. **Navbar Component**
+
+**`Navbar.js`**:
+
+```jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Navbar = () => {
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container">
+        <Link className="navbar-brand" to="/">Event Portal</Link>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">Home</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/events">Events</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/register">Register</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/contact">Contact</Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+```
+
+#### 2. **Hero Section**
+
+**`HeroSection.js`**:
+
+```jsx
+import React from 'react';
+
+const HeroSection = () => {
+  return (
+    <header className="hero-section text-center text-white" style={{ backgroundImage: 'url(/event-banner.jpg)', backgroundSize: 'cover', height: '50vh' }}>
+      <div className="container d-flex justify-content-center align-items-center h-100">
+        <div>
+          <h1 className="display-4">Tech Event 2025</h1>
+          <p className="lead">Join us for an exciting tech experience</p>
+          <a href="/register" className="btn btn-primary btn-lg">Register Now</a>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default HeroSection;
+```
+
+#### 3. **Event List (Cards Layout)**
+
+**`EventList.js`**:
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+const EventList = ({ onSelectSession }) => {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    // Mock data for events
+    const eventData = [
+      { id: 1, title: 'Keynote: The Future of AI', speaker: 'John Doe', time: '10:00 AM' },
+      { id: 2, title: 'Tech Innovations in Healthcare', speaker: 'Jane Smith', time: '12:00 PM' },
+      { id: 3, title: 'Cybersecurity in 2025', speaker: 'Alice Johnson', time: '2:00 PM' }
+    ];
+    setEvents(eventData);
+  }, []);
+
+  return (
+    <div className="container my-5">
+      <div className="row">
+        {events.map(event => (
+          <div key={event.id} className="col-md-4">
+            <div className="card mb-4 shadow-sm">
+              <img src="https://via.placeholder.com/300" className="card-img-top" alt={event.title} />
+              <div className="card-body">
+                <h5 className="card-title">{event.title}</h5>
+                <p className="card-text">Speaker: {event.speaker}</p>
+                <p className="card-text">Time: {event.time}</p>
+                <button className="btn btn-primary" onClick={() => onSelectSession(event)}>Register</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default EventList;
+```
+
+#### 4. **Registration Form**
+
+**`RegistrationForm.js`**:
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
+const RegistrationForm = ({ selectedSession }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    sessionTitle: selectedSession ? selectedSession.title : ''
+  });
+
+  const [error, setError] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    if (selectedSession) {
+      setFormData(prevState => ({ ...prevState, sessionTitle: selectedSession.title }));
+    }
+  }, [selectedSession]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validation with regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const mobileRegex = /^[0-9]{10}$/;
+
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.mobile || !formData.sessionTitle) {
+      setError('All fields are required.');
+      return;
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email.');
+      return;
+    }
+
+    if (!mobileRegex.test(formData.mobile)) {
+      setError('Please enter a valid mobile number.');
+      return;
+    }
+
+    // Save form data to localStorage
+    localStorage.setItem('registrationData', JSON.stringify(formData));
+
+    setError('');
+    history.push('/thank-you');
+  };
+
+  return (
+    <div className="container my-5">
+      <h2>Register for the Event</h2>
+      {error && <div className="alert alert-danger">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label className="form-label">First Name</label>
+          <input type="text" className="form-control" name="firstName" value={formData.firstName} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Last Name</label>
+          <input type="text" className="form-control" name="lastName" value={formData.lastName} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Mobile No</label>
+          <input type="text" className="form-control" name="mobile" value={formData.mobile} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Session Title</label>
+          <input type="text" className="form-control" name="sessionTitle" value={formData.sessionTitle} readOnly />
+        </div>
+        <button type="submit" className="btn btn-primary">Register</button>
+      </form>
+    </div>
+  );
+};
+
+export default RegistrationForm;
+```
+
+#### 5. **Footer Component**
+
+**`Footer.js`**:
+
+```jsx
+import React from 'react';
+
+const Footer = () => {
+  return (
+    <footer className="bg-dark text-white text-center py-3">
+      <p>Contact Us | Social Links</p>
+    </footer>
+  );
+};
+
+export default Footer;
+```
+
+### Step 3: Setup Routing in `App.js`
+
+Finally, we need to set up routing in `App.js` to navigate between different pages like the homepage, events list, registration form, etc.
+
+**`App.js`**:
+
+```jsx
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navbar from './Navbar';
+import HeroSection from './HeroSection';
+import EventList from './EventList';
+import RegistrationForm from './RegistrationForm';
+import Footer from './Footer';
+
+const App = () => {
+  const [selectedSession, setSelectedSession] = useState(null);
+
+  const handleSelectSession = (session) => {
+    setSelectedSession(session);
+  };
+
+  return (
+    <Router>
+      <Navbar />
+      <Switch>
+        <Route path="/" exact>
+          <HeroSection />
+          <EventList onSelectSession={handleSelectSession} />
+        </Route>
+        <Route path="/register">
+          <RegistrationForm selectedSession={selectedSession} />
+        </Route>
+        <Route path="/thank-you">
+          <div className="container my-5"><h2>Thank you for registering!</h2></div>
+        </Route>
+      </Switch>
+      <Footer />
+    </Router>
+  );
+};
+
+export default App;
+```
+
+### Final Thoughts:
+
+This setup provides a **responsive homepage layout** with all the necessary sections for your event registration portal:
+
+1. **Navbar**: For navigation.
+2. **Hero Section**: Displaying event details and a "Register Now" button.
+3. **Event List**: Displays available sessions in cards.
+4. **Registration Form**: Allows users to register for a selected session, with form validation using regular expressions.
+5. **Footer**: Contains contact information.
+
+The form data is saved in `localStorage` to persist the user's registration details. You can further enhance this by adding features like authentication, a database, and more advanced form handling.

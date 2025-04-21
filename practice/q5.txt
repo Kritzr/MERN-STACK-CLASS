@@ -1,0 +1,397 @@
+Here’s how we can create an elegant and responsive **restaurant reservation** interface using **React** with **Bootstrap**. This interface will allow users to view restaurant details, log in, and reserve tables. I’ll walk through the setup, including the necessary components and the use of `useState`, `useEffect`, and `localStorage` to manage user authentication and data persistence.
+
+### 🔧 Project Setup
+
+1. **Install Bootstrap**:
+   ```bash
+   npm install bootstrap
+   ```
+
+2. **Import Bootstrap Styles**:
+   In `index.js` or `App.js`, add:
+   ```jsx
+   import 'bootstrap/dist/css/bootstrap.min.css';
+   ```
+
+### 🔑 **File Structure (suggested)**
+```
+src/
+│
+├── components/
+│   ├── Navbar.js
+│   ├── Hero.js
+│   ├── MenuPreview.js
+│   ├── AboutUs.js
+│   ├── LoginSignup.js
+│   ├── TableBookingForm.js
+│   └── Footer.js
+│
+├── App.js
+└── index.js
+```
+
+### 📑 **App.js (Core Logic)**
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Navbar, Nav, Button, Modal, Form, Row, Col, Card, Toast } from 'react-bootstrap';
+import MenuPreview from './components/MenuPreview';
+import AboutUs from './components/AboutUs';
+import LoginSignup from './components/LoginSignup';
+import TableBookingForm from './components/TableBookingForm';
+import Footer from './components/Footer';
+import Hero from './components/Hero';
+
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+
+  // Check login status on load
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setIsLoggedIn(true);
+      setUser(storedUser);
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setIsLoggedIn(true);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  return (
+    <div>
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="#">Restaurant</Navbar.Brand>
+          <Nav className="ms-auto">
+            <Nav.Link href="#menu">Menu</Nav.Link>
+            <Nav.Link href="#book-table">Book Table</Nav.Link>
+            <Nav.Link href="#about">About</Nav.Link>
+            <Nav.Link href="#contact">Contact</Nav.Link>
+            {isLoggedIn ? (
+              <Button variant="outline-light" onClick={handleLogout}>Logout</Button>
+            ) : (
+              <Button variant="outline-light" data-bs-toggle="modal" data-bs-target="#loginSignupModal">Login / Signup</Button>
+            )}
+          </Nav>
+        </Container>
+      </Navbar>
+
+      <Hero />
+
+      <MenuPreview />
+
+      <AboutUs />
+
+      <TableBookingForm user={user} isLoggedIn={isLoggedIn} />
+
+      <Footer />
+
+      <LoginSignup onLogin={handleLogin} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+### 📋 **Components**
+
+#### 1. **Navbar.js**
+
+```jsx
+import React from 'react';
+import { Navbar, Nav, Button } from 'react-bootstrap';
+
+const NavbarComponent = ({ isLoggedIn, onLogout }) => {
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar.Brand href="#">Restaurant</Navbar.Brand>
+      <Nav className="ms-auto">
+        <Nav.Link href="#menu">Menu</Nav.Link>
+        <Nav.Link href="#book-table">Book Table</Nav.Link>
+        <Nav.Link href="#about">About</Nav.Link>
+        <Nav.Link href="#contact">Contact</Nav.Link>
+        {isLoggedIn ? (
+          <Button variant="outline-light" onClick={onLogout}>Logout</Button>
+        ) : (
+          <Button variant="outline-light" data-bs-toggle="modal" data-bs-target="#loginSignupModal">Login / Signup</Button>
+        )}
+      </Nav>
+    </Navbar>
+  );
+};
+
+export default NavbarComponent;
+```
+
+---
+
+#### 2. **Hero.js**
+
+```jsx
+const Hero = () => (
+  <div className="hero-section" style={{ backgroundImage: 'url("https://via.placeholder.com/1200x400")', height: '400px', backgroundSize: 'cover', textAlign: 'center', color: 'white' }}>
+    <h1 className="display-4 pt-5">Reserve Your Table Today</h1>
+    <p className="lead">Enjoy a delightful dining experience at our restaurant.</p>
+  </div>
+);
+
+export default Hero;
+```
+
+---
+
+#### 3. **MenuPreview.js**
+
+```jsx
+import React from 'react';
+import { Card, Row, Col } from 'react-bootstrap';
+
+const MenuPreview = () => {
+  const dishes = [
+    { id: 1, name: 'Pasta', description: 'Delicious Italian pasta with marinara sauce.', price: '$12' },
+    { id: 2, name: 'Steak', description: 'Juicy grilled steak with sides.', price: '$25' },
+    { id: 3, name: 'Salad', description: 'Fresh mixed greens with a light vinaigrette.', price: '$8' },
+  ];
+
+  return (
+    <Container id="menu" className="my-4">
+      <h2>Popular Dishes</h2>
+      <Row>
+        {dishes.map(dish => (
+          <Col md={4} key={dish.id} className="mb-4">
+            <Card>
+              <Card.Body>
+                <Card.Title>{dish.name}</Card.Title>
+                <Card.Text>{dish.description}</Card.Text>
+                <Card.Text>{dish.price}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
+  );
+};
+
+export default MenuPreview;
+```
+
+---
+
+#### 4. **AboutUs.js**
+
+```jsx
+const AboutUs = () => (
+  <Container id="about" className="my-4">
+    <h2>About Us</h2>
+    <Row>
+      <Col md={6}>
+        <p>We are a family-owned restaurant offering a range of exquisite dishes prepared with the finest ingredients. Our ambiance provides the perfect environment for an intimate meal or a gathering with friends.</p>
+      </Col>
+      <Col md={6}>
+        <img src="https://via.placeholder.com/400x300" alt="Restaurant Interior" className="img-fluid" />
+      </Col>
+    </Row>
+  </Container>
+);
+
+export default AboutUs;
+```
+
+---
+
+#### 5. **LoginSignup.js**
+
+```jsx
+import React, { useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+
+const LoginSignup = ({ onLogin }) => {
+  const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '', firstName: '', lastName: '', phoneNumber: '', confirmPassword: '' });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup && formData.password !== formData.confirmPassword) {
+      alert("Passwords don't match.");
+      return;
+    }
+    const user = { email: formData.email, firstName: formData.firstName, lastName: formData.lastName, phoneNumber: formData.phoneNumber };
+    localStorage.setItem('user', JSON.stringify(user));
+    onLogin(user);
+  };
+
+  return (
+    <Modal.Dialog>
+      <Modal.Header closeButton>
+        <Modal.Title>{isSignup ? 'Sign Up' : 'Login'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
+          {isSignup && (
+            <>
+              <Form.Group className="mb-3">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+              </Form.Group>
+            </>
+          )}
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} required />
+          </Form.Group>
+          {isSignup && (
+            <Form.Group className="mb-3">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+            </Form.Group>
+          )}
+          <Button variant="primary" type="submit">{isSignup ? 'Sign Up' : 'Login'}</Button>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setIsSignup(!isSignup)}>
+          {isSignup ? 'Already have an account? Login' : 'Don’t have an account? Sign Up'}
+        </Button>
+      </Modal.Footer>
+    </Modal.Dialog>
+  );
+};
+
+export default LoginSignup;
+```
+
+---
+
+#### 6. **TableBookingForm.js**
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
+
+const TableBookingForm = ({ user, isLoggedIn }) => {
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', phoneNumber: '', numberOfGuests: '', date: '', time: '', specialRequests: '' });
+
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+      }));
+    }
+  }, [isLoggedIn, user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Table booked for:", formData);
+    // Implement booking functionality
+  };
+
+  return (
+    <Container id="book-table" className="my-4">
+      <h2>Table Booking</h2>
+      {isLoggedIn ? (
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control name="firstName" value={formData.firstName} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control name="lastName" value={formData.lastName} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Phone Number</Form.Label>
+            <Form.Control type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Number of Guests</Form.Label>
+            <Form.Control type="number" name="numberOfGuests" value={formData.numberOfGuests} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Date</Form.Label>
+            <Form.Control type="date" name="date" value={formData.date} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Time</Form.Label>
+            <Form.Control type="time" name="time" value={formData.time} onChange={handleChange} required />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Special Requests</Form.Label>
+            <Form.Control as="textarea" name="specialRequests" value={formData.specialRequests} onChange={handleChange} />
+          </Form.Group>
+          <Button variant="primary" type="submit">Book Table</Button>
+        </Form>
+      ) : (
+        <p>Please log in to book a table.</p>
+      )}
+    </Container>
+  );
+};
+
+export default TableBookingForm;
+```
+
+---
+
+#### 7. **Footer.js**
+
+```jsx
+const Footer = () => (
+  <footer className="bg-dark text-white text-center py-4">
+    <p>Contact us: 123-456-7890 | Hours: 10am - 10pm</p>
+    <div>Location Map (Embed Google Map here)</div>
+  </footer>
+);
+
+export default Footer;
+```
+
+---
+
+### 🚀 **Testing and Improvements**
+
+- Test the app locally.
+- You can expand features such as **form validation**, **confirmation modals**, or implement backend API calls for bookings.
+- Use **React Router** for navigation to create a multi-page experience.
+
+Let me know if you'd like a **GitHub repo** or more customization!
